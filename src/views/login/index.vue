@@ -1,5 +1,7 @@
 <template>
-  <div class="login-container">
+  <!-- <Test /> -->
+   <WebSite/>
+  <!-- <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
@@ -49,11 +51,13 @@
       </div>
 
     </el-form>
-  </div>
+  </div> -->
 </template>
 
 <script>
 import { validUsername } from '@/utils/validate'
+import Test from './test.vue'
+import WebSite from '@/views/website/index.vue'
 
 export default {
   name: 'Login',
@@ -85,6 +89,10 @@ export default {
       passwordType: 'password',
       redirect: undefined
     }
+  },
+  components: {
+    Test,
+	WebSite
   },
   watch: {
     $route: {
