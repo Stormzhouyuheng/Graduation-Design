@@ -1,6 +1,9 @@
 <template>
   <!-- <Test /> -->
-   <WebSite/>
+   <div>
+    <WebSite/>
+   </div>
+   
   <!-- <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 

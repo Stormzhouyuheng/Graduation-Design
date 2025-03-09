@@ -1,20 +1,28 @@
 <template>
 	<div class="webSite">
-		<Header></Header>
+		<NewsHeader @handleCurrentMenu="handleCurrentMenu"></NewsHeader>
+		<NewsBody :currentMenu="currentMenu"/>
 	</div>
 </template>
 
 <script>
-import Header from '@/components/Header/header.vue'
+import NewsHeader from '@/components/Header/header.vue'
+import NewsBody from '@/components/NewsBody'
 export default {
     name: "WebSite",
 	data() {
 		return {
-			
+			currentMenu: '广软要闻'
 		}
 	},
 	components: {
-		Header
+		NewsHeader,
+		NewsBody
+	},
+	methods: {
+		handleCurrentMenu(data) {
+			this.currentMenu = data
+		}
 	}
 }
 </script>
@@ -23,6 +31,5 @@ export default {
 	.webSite {
 		width: 100%;
 		height: 100%;
-		background: red;
 	}
 </style>
