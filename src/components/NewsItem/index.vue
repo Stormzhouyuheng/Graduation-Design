@@ -38,7 +38,7 @@ export default {
 <style lang="scss" scoped>
 .newsItem {
     width: 100%;
-    height: 8%;
+    height: 200px;
     display: flex;
     padding: 20px;
     border: 1px solid #ccc;

@@ -1,7 +1,7 @@
 <template>
   <div class="frame">
     <!-- <slot name="frame"></slot> -->
-    <!-- <div class="list-right-top">
+    <div class="list-right-top">
       <div class="list-right-left pull-left">
         <span>{{ currentMenu.slice(0, 2) }}</span>{{ currentMenu.slice(-2) }}
       </div>
@@ -24,20 +24,19 @@
           @handleCurrentNews="handleCurrentNews"/>
       </div>
       <div class="right">
-        <NewsDetails v-loading="loading" :newContent="newContent"/>
+        <NewsDetails 
+          v-loading="loading" 
+          :newContent="newContent" 
+          :page="page" />
       </div>
-    </div> -->
+    </div>
 
-    <div class="handlePage">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
-      </el-pagination>
+    <div class="handlePage" v-if="Object.keys(newContent).length !== 0">
+        <Pagination 
+          :total="page.total"
+          :page.sync="page.pageNum"
+          :limit.sync="page.pageSize"
+          @pagination="handleGetNewsList"/>
     </div>
   </div>
 </template>
@@ -53,9 +52,13 @@ export default {
             newList: [],
             link: '',
             newContent: {},
-            currentPage4: 4,
             currentIndex: 0,
-            loading: false
+            loading: false,
+            page: {
+              pageSize: 10,
+              pageNum: 1, 
+              total: 0
+            }
         }
     },
     components: {
@@ -70,13 +73,15 @@ export default {
     },
     methods: {
       handleGetNewsList() {
+        this.currentIndex = 0
         getNewsList({
-          page: '1',
-          pageSize: '10'
+          page: this.page.pageNum,
+          pageSize: this.page.pageSize
         }).then(res => {
           this.newList = res.newList
+          this.page.total = res.total
           this.link = res.newList[0].link
-          console.log('123', res);
+          // console.log('123', res, res.newList);
         }).then(res => {
           this.handleGetNewsContent()
         })
@@ -87,22 +92,16 @@ export default {
           link: this.link
         }).then(res => {
           this.newContent = res
-          console.log('456', res);
+          // console.log('456', res);
         }).finally(() => {
           this.loading = false
         })
       },
       handleCurrentNews(news) {
-        console.log('handleCurrentNews', news);
         this.currentIndex = news.index
         this.link= news.item.link
+        this.newContent = {}
         this.handleGetNewsContent()
-      },
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
       }
     },
     mounted() {
@@ -114,9 +113,9 @@ export default {
 <style lang="scss" scoped>
 .frame {
   width: 100%;
-  // height: 500px;
-  // background: yellow;
   padding: 0 100px;
+  // height: 100%;
+  // background: red;
 }
 .newsPart {
   width: 100%;
@@ -143,14 +142,11 @@ export default {
   justify-content: space-between;
 }
 .list-right-left {
-    // line-height: 1;
     padding-bottom: 25px;
-    // border-bottom: solid 1px #ddd;
     position: relative;
     font-size: 30px;
     font-weight: 600;
     color: #333;
-    // width: 100px;
     span {
       color: #244CB2;
       display: block;
@@ -178,7 +174,6 @@ export default {
     padding-left: 20px;
     display: flex;
     align-items: center;
-    // margin: 15px 0 8px;
 }
 .arrow {
   margin: 0 5px;

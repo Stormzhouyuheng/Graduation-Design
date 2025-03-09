@@ -1,7 +1,7 @@
 <template>
 	<div class="header">
 		<div class="header-top">
-			<div class="container">您好，欢迎访问学生实习就业管理系统！今天是： {{ date }}</div>
+			<div class="container">您好，欢迎访问学生实习就业管理系统！今天是： {{ formattedTime }}</div>
 		</div>
 		<div class="header-center">
 			<div class="center container">
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { dateFormat } from '@/utils/timeFrame'
+// import { dateFormat } from '@/utils/timeFrame'
 export default {
     name: "Header",
 	data() {
@@ -43,7 +43,9 @@ export default {
 				// '多彩广软',
 				// '通知公告'
 			],
-			date: dateFormat('YYYY年mm月dd日 HH时MM分', new Date())
+			// date: dateFormat('YYYY年mm月dd日 HH时MM分', new Date()),
+			currentTime: new Date(), // 存储当前时间的日期对象
+        	formattedTime: '' // 存储格式化后的时间字符串
 		}
 	},
 	methods: {
@@ -52,8 +54,40 @@ export default {
 		},
 		menusClick(item) {
 			this.$emit('handleCurrentMenu', item)
+		},
+		updateTime() {
+			// 更新当前时间
+			this.currentTime = new Date();
+			// 格式化时间并更新 formattedTime 变量
+			this.formattedTime = this.formatTime(this.currentTime);
+		},
+		formatTime(date) {
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			const hours = String(date.getHours()).padStart(2, '0');
+			const minutes = String(date.getMinutes()).padStart(2, '0');
+			const seconds = String(date.getSeconds()).padStart(2, '0');
+			const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+			const weekDay = weekDays[date.getDay()];
+			// 返回格式化后的时间字符串
+			return `${year}-${month}-${day} ${hours}:${minutes}:${seconds} ${weekDay}`;
 		}
-	}
+	},
+	beforeDestroy() {
+		// 组件销毁前清除定时器，避免内存泄漏
+		if (this.timer) {
+			clearInterval(this.timer);
+		}
+	},
+	created() {
+		// 页面加载时更新一次时间
+		this.updateTime();
+		// 设置定时器，每秒更新一次时间
+		this.timer = setInterval(() => {
+			this.updateTime();
+		}, 1000);
+	},
 }
 </script>
 
