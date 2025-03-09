@@ -20,10 +20,10 @@
             >
                 <!-- <h3 class="title">登录</h3> -->
 
-                <el-form-item prop="username">
+                <el-form-item prop="user_id">
                     <div class="line"></div>
                     <el-input
-                        v-model="loginForm.username"
+                        v-model="loginForm.user_id"
                         type="text"
                         auto-complete="off"
                         placeholder="请输入用户名"
@@ -77,22 +77,21 @@
                     </div>
                 </el-form-item> -->
 
-                <div class="checkItems">
+                <!-- <div class="checkItems">
                     <el-checkbox
                         v-model="loginForm.rememberMe"
                         style="color: #fff"
                         >记住密码</el-checkbox
                     >
-                    <!-- margin: 0px 0px 25px 0px;  -->
-                    <!-- <div>ip登录</div> -->
-                    <!-- <el-button type="primary" size="mini" @click="ipLogin"
+                    <div>ip登录</div>
+                    <el-button type="primary" size="mini" @click="ipLogin"
                         >ip登录</el-button
-                    > -->
-                    <!-- <el-checkbox
+                    >
+                    <el-checkbox
                         v-model="loginForm.ipLogin"
                         style="color: #fff"
-                        >ip登录</el-checkbox> -->
-                </div>
+                        >ip登录</el-checkbox>
+                </div> -->
 
                 <el-button
                     :loading="loading"
@@ -109,7 +108,8 @@
             </el-form>
             <!--  底部  -->
             <div class="el-login-footer">
-                Copyright © 2020 水情中心 All Rights Reserved.
+                <!-- Copyright © 2020 水情中心 All Rights Reserved. -->
+                Copyright © 2025 周新宇 All Rights Reserved.
             </div>
         </div>
     </div>
@@ -123,12 +123,13 @@
 // import { getToken, setToken, removeToken } from "@/utils/auth";
 // import { removeItem } from "@/utils/localStorage";
 
+import { login } from '@/api/login'
 export default {
     name: "Login",
     
     data() {
         return {
-            title: 'xxx系统',
+            title: '学生实习就业管理系统',
             codeUrl: "",
             cookiePassword: "",
             loginForm: {
@@ -164,7 +165,7 @@ export default {
             },
             loading: false,
             redirect: undefined,
-            logo: require("../../assets/logo.jpeg")
+            logo: require("../../assets/logo.png")
         };
     },
     watch: {
@@ -209,34 +210,43 @@ export default {
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
                     this.loading = true;
-                    if (this.loginForm.rememberMe) {
-                        Cookies.set("username", this.loginForm.username, {
-                            expires: 30,
+                    console.log('this.loginForm', this.loginForm);
+                    login(this.loginForm).then(res => {
+                        this.$message({
+                            message: '登录成功',
+                            type: 'success'
                         });
-                        Cookies.set(
-                            "password",
-                            encrypt(this.loginForm.password),
-                            { expires: 30 }
-                        );
-                        Cookies.set("rememberMe", this.loginForm.rememberMe, {
-                            expires: 30,
-                        });
-                    } else {
-                        Cookies.remove("username");
-                        Cookies.remove("password");
-                        Cookies.remove("rememberMe");
-                    }
-                    this.$store
-                        .dispatch("Login", this.loginForm)
-                        .then(() => {
-                            this.$router
-                                .push({ path: this.redirect || "/home" })
-                                .catch(() => {});
-                        })
-                        .catch(() => {
-                            this.loading = false;
-                            this.getCode();
-                        });
+                        this.$router.push({ path: '/company' });
+                    	console.log('登录成功', res);
+                    })
+                    // if (this.loginForm.rememberMe) {
+                    //     Cookies.set("username", this.loginForm.username, {
+                    //         expires: 30,
+                    //     });
+                    //     Cookies.set(
+                    //         "password",
+                    //         encrypt(this.loginForm.password),
+                    //         { expires: 30 }
+                    //     );
+                    //     Cookies.set("rememberMe", this.loginForm.rememberMe, {
+                    //         expires: 30,
+                    //     });
+                    // } else {
+                    //     Cookies.remove("username");
+                    //     Cookies.remove("password");
+                    //     Cookies.remove("rememberMe");
+                    // }
+                    // this.$store
+                    //     .dispatch("Login", this.loginForm)
+                    //     .then(() => {
+                    //         this.$router
+                    //             .push({ path: this.redirect || "/home" })
+                    //             .catch(() => {});
+                    //     })
+                    //     .catch(() => {
+                    //         this.loading = false;
+                    //         this.getCode();
+                    //     });
                 }
             });
         },
@@ -328,6 +338,11 @@ export default {
     h3 {
         font-size: 30px;
         color: #fff;
+        text-shadow: 
+            -1px -1px 0 #000,  
+            1px -1px 0 #000,
+            -1px  1px 0 #000,
+            1px  1px 0 #000; /* 四个方向的阴影 */;
     }
 
     img {
@@ -369,9 +384,10 @@ export default {
     flex-direction: column;
     justify-content: space-around;
     border-radius: 12px;
-    background: rgba($color: #075594, $alpha: 0.8);
+    background: rgba($color: #075594, $alpha: 0.5);
     width: 450px;
-    height: 395px;
+    // height: 395px;
+    height: 280px;
     padding: 33px 24px;
     -webkit-box-reflect: below 10px -webkit-linear-gradient(transparent, transparent
                 90%, rgba(10, 51, 103, 0.3));

@@ -52,7 +52,9 @@ router.beforeEach(async(to, from, next) => {
       next()
     } else {
       // other pages that do not have permission to access are redirected to the login page.
-      next(`/login?redirect=${to.path}`)
+      // next(`/login?redirect=${to.path}`)
+      console.log(to, from, next);
+      next()
       NProgress.done()
     }
   }
