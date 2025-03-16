@@ -117,13 +117,15 @@
 
 <script>
 // import { getCodeImg } from "@/api/login";
-// import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 // import { encrypt, decrypt } from "@/utils/jsencrypt";
 // import { mapGetters } from "vuex";
 // import { getToken, setToken, removeToken } from "@/utils/auth";
 // import { removeItem } from "@/utils/localStorage";
 
 import { login } from '@/api/login'
+import { constantRoutes, baseRoutes } from "@/router";
+import Layout from '@/layout'
 export default {
     name: "Login",
     
@@ -189,36 +191,211 @@ export default {
         },
     },
     methods: {
-        getCode() {
-            getCodeImg().then((res) => {
-                this.codeUrl = "data:image/gif;base64," + res.img;
-                this.loginForm.uuid = res.uuid;
-            });
-        },
-        getCookie() {
-            const username = Cookies.get("username");
-            // const password = Cookies.get("password");
-            const rememberMe = Cookies.get("rememberMe");
-            this.loginForm = {
-                username:
-                    username === undefined ? this.loginForm.username : username,
-                rememberMe:
-                    rememberMe === undefined ? false : Boolean(rememberMe),
-            };
-        },
+        // getCode() {
+        //     getCodeImg().then((res) => {
+        //         this.codeUrl = "data:image/gif;base64," + res.img;
+        //         this.loginForm.uuid = res.uuid;
+        //     });
+        // },
+        // getCookie() {
+        //     const username = Cookies.get("username");
+        //     // const password = Cookies.get("password");
+        //     const rememberMe = Cookies.get("rememberMe");
+        //     this.loginForm = {
+        //         username:
+        //             username === undefined ? this.loginForm.username : username,
+        //         rememberMe:
+        //             rememberMe === undefined ? false : Boolean(rememberMe),
+        //     };
+        // },
         handleLogin() {
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
                     this.loading = true;
-                    console.log('this.loginForm', this.loginForm);
-                    login(this.loginForm).then(res => {
+                    // console.log('this.loginForm', this.loginForm);
+                    login(this.loginForm)
+                    .then(res => {
+                        if(res.code === '000') {
+                            return this.$message({
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
                         this.$message({
                             message: '登录成功',
                             type: 'success'
                         });
-                        this.$router.push({ path: '/company' });
-                    	console.log('登录成功', res);
+                        console.log('res', res);
+                        // 将路由信息存储到cookie中
+                        // this.handleCookie(res)
+                        Cookies.set('routerInfo', res);
+                        
+
+                        // const currentRouter = JSON.parse(Cookies.get('routerInfo'))
+                        // const type = currentRouter.routerMessage[0].url.split('/').filter(Boolean)[0]
+                        // const myRoutes = []
+                        // if(constantRoutes.length !== baseRoutes.length) {
+                        //     console.log(1);
+                        //     if(type === 'company') {
+                        //         myRoutes.push(
+                        //             // {
+                        //             //     path: '/website',
+                        //             //     component: Layout,
+                        //             //     redirect: '/website',
+                        //             //     children: [{
+                        //             //     path: 'website',
+                        //             //     name: 'Website',
+                        //             //     component: () => import('@/views/website/index'),
+                        //             //     meta: { title: 'website', icon: 'website' }
+                        //             //     }],
+                        //             //     // hidden: true
+                        //             // },
+                        //             {
+                        //                 // type: 'company',
+                        //                 path: '/job',
+                        //                 component: Layout,
+                        //                 redirect: '/job',
+                        //                 children: [{
+                        //                     path: 'job',
+                        //                     name: 'Job',
+                        //                     component: () => import('@/views/company/job'),
+                        //                     meta: { title: '招聘岗位', icon: 'dashboard' }
+                        //                 }]
+                        //             },
+                        //             {
+                        //                 // type: 'company',
+                        //                 path: '/message',
+                        //                 component: Layout,
+                        //                 redirect: '/message',
+                        //                 children: [{
+                        //                     path: 'message',
+                        //                     name: 'Message',
+                        //                     component: () => import('@/views/company/message'),
+                        //                     meta: { title: '企业信息', icon: 'dashboard' }
+                        //                 }]
+                        //             }
+                        //         )
+                        //         for (let i = constantRoutes.length - 1; i >= 0; i--) {
+                        //             if (constantRoutes[i].type === 'teacher') {
+                        //                 // 使用 splice 方法移除当前项
+                        //                 constantRoutes.splice(i, 1);
+                        //             }
+                        //         }
+                        //     } else if(type === 'teacher') {
+                        //         myRoutes.push(
+                        //             // {
+                        //             //     path: '/website',
+                        //             //     component: Layout,
+                        //             //     redirect: '/website',
+                        //             //     children: [{
+                        //             //     path: 'website',
+                        //             //     name: 'Website',
+                        //             //     component: () => import('@/views/website/index'),
+                        //             //     meta: { title: 'website', icon: 'website' }
+                        //             //     }],
+                        //             //     // hidden: true
+                        //             // },
+                        //             {
+                        //                 // type: 'teacher',
+                        //                 path: '/student',
+                        //                 component: Layout,
+                        //                 redirect: '/student',
+                        //                 children: [{
+                        //                     path: 'student',
+                        //                     name: 'Student',
+                        //                     component: () => import('@/views/teacher/student'),
+                        //                     meta: { title: '学生信息', icon: 'dashboard' }
+                        //                 }]
+                        //             }
+                        //         )
+                        //         for (let i = constantRoutes.length - 1; i >= 0; i--) {
+                        //             if (constantRoutes[i].type === 'company') {
+                        //                 // 使用 splice 方法移除当前项
+                        //                 constantRoutes.splice(i, 1);
+                        //             }
+                        //         }
+                        //     }
+                        // } else {
+                        //     console.log(2);
+                        //     if(type === 'company') {
+                        //         myRoutes.push(
+                        //             // {
+                        //             //     path: '/website',
+                        //             //     component: Layout,
+                        //             //     redirect: '/website',
+                        //             //     children: [{
+                        //             //     path: 'website',
+                        //             //     name: 'Website',
+                        //             //     component: () => import('@/views/website/index'),
+                        //             //     meta: { title: 'website', icon: 'website' }
+                        //             //     }],
+                        //             //     // hidden: true
+                        //             // },
+                        //             {
+                        //                 // type: 'company',
+                        //                 path: '/job',
+                        //                 component: Layout,
+                        //                 redirect: '/job',
+                        //                 children: [{
+                        //                     path: 'job',
+                        //                     name: 'Job',
+                        //                     component: () => import('@/views/company/job'),
+                        //                     meta: { title: '招聘岗位', icon: 'dashboard' }
+                        //                 }]
+                        //             },
+                        //             {
+                        //                 // type: 'company',
+                        //                 path: '/message',
+                        //                 component: Layout,
+                        //                 redirect: '/message',
+                        //                 children: [{
+                        //                     path: 'index',
+                        //                     name: 'Message',
+                        //                     component: () => import('@/views/company/message'),
+                        //                     meta: { title: '企业信息', icon: 'dashboard' }
+                        //                 }]
+                        //             }
+                        //         )
+                        //     }
+                        //     if(type === 'teacher') {
+                        //         myRoutes.push(
+                        //             // {
+                        //             //     path: '/website',
+                        //             //     component: Layout,
+                        //             //     redirect: '/website',
+                        //             //     children: [{
+                        //             //     path: 'website',
+                        //             //     name: 'Website',
+                        //             //     component: () => import('@/views/website/index'),
+                        //             //     meta: { title: 'website', icon: 'website' }
+                        //             //     }],
+                        //             //     // hidden: true
+                        //             // },
+                        //             {
+                        //                 // type: 'teacher',
+                        //                 path: '/student',
+                        //                 component: Layout,
+                        //                 redirect: '/student',
+                        //                 children: [{
+                        //                     path: 'student',
+                        //                     name: 'Student',
+                        //                     component: () => import('@/views/teacher/student'),
+                        //                     meta: { title: '学生信息', icon: 'dashboard' }
+                        //                 }]
+                        //             }
+                        //         )
+                        //     }
+                        // }
+                        // this.$router.options.routes = this.$router.options.routes.concat(myRoutes)
+                        // this.$store.commit('app/SET_MY_ROUTES', myRoutes)
+                        // console.log('constantRoutes', constantRoutes, myRoutes, this.$router);
+                        
+                        // 这里到时候push到res的第一个路由
+                        this.$router.push({ path: '/website' });
+                    }).finally(() =>{
+                        this.loading = false;
                     })
+                    
                     // if (this.loginForm.rememberMe) {
                     //     Cookies.set("username", this.loginForm.username, {
                     //         expires: 30,
@@ -250,24 +427,37 @@ export default {
                 }
             });
         },
-        ipLogin() {
-            if (getToken()) {
-                removeToken();
+        handleCookie(router) {
+            const currentValue = Cookies.get('routerInfo');
+
+            if (currentValue !== undefined) {
+                Cookies.set('routerInfo', router);
+            } else {
+                // 不存在则新增（示例：初始值）
+                Cookies.set('routerInfo', router);
             }
-            this.loading = true;
-            this.$store
-                .dispatch("IpLogin")
-                .then(() => {
-                    removeItem("logout")
-                    this.$router
-                        .push({ path: this.redirect || "/home" })
-                        .catch(() => {});
-                })
-                .catch(() => {
-                    this.loading = false;
-                });
-        },
+        }
+        // ipLogin() {
+        //     if (getToken()) {
+        //         removeToken();
+        //     }
+        //     this.loading = true;
+        //     this.$store
+        //         .dispatch("IpLogin")
+        //         .then(() => {
+        //             removeItem("logout")
+        //             this.$router
+        //                 .push({ path: this.redirect || "/home" })
+        //                 .catch(() => {});
+        //         })
+        //         .catch(() => {
+        //             this.loading = false;
+        //         });
+        // },
     },
+    // mounted() {
+    //     console.log('mounted => constantRoutes.length', constantRoutes.length)
+    // }
 };
 </script>
 

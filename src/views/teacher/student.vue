@@ -1,13 +1,13 @@
 <template>
-    <div>123</div>
+    <div>Student</div>
 </template>
 
 <script>
 export default {
-    name: 'Company'
+    name: 'Student'
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 
 </style>

@@ -5,7 +5,8 @@ const state = {
     opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
     withoutAnimation: false
   },
-  device: 'desktop'
+  device: 'desktop',
+  myRoutes: []
 }
 
 const mutations = {
@@ -25,6 +26,10 @@ const mutations = {
   },
   TOGGLE_DEVICE: (state, device) => {
     state.device = device
+  },
+  SET_MY_ROUTES: (state, routes) => {
+    console.log('SET_MY_ROUTES', routes);
+    state.myRoutes = routes
   }
 }
 

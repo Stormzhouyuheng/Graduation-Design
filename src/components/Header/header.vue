@@ -10,7 +10,8 @@
 					学生实习就业管理系统
 				</div>
 				<div class="search">
-					<div @click="gotoSchool">登录</div>
+					<!-- <div @click="gotoSchool">学校主页</div> -->
+					<div @click="gotoSchool">退出</div>
 				</div>
 			</div>
 		</div>
@@ -50,7 +51,8 @@ export default {
 	},
 	methods: {
 		gotoSchool() {
-			window.open('https://www.seig.edu.cn/')
+			// window.open('https://www.seig.edu.cn/')
+			this.$router.push({ path: '/login' });
 		},
 		menusClick(item) {
 			this.$emit('handleCurrentMenu', item)

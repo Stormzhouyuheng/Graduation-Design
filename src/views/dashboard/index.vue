@@ -1,18 +1,31 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    <div class="dashboard-text">routerInfo: {{ routerInfo }}</div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import Cookies from "js-cookie";
 
 export default {
   name: 'Dashboard',
+  data() {
+    return {
+      routerInfo: null
+    }
+  },
   computed: {
     ...mapGetters([
-      'name'
+      'name',
+      'routerMessage'
     ])
+    // routerInfo() {
+    //   return { routerMessage: this.routerMessage }
+    // }
+  },
+  mounted() {
+    this.routerInfo = Cookies.get('routerInfo');
   }
 }
 </script>

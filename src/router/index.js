@@ -6,6 +6,9 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
+console.log(3);
+
+
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -30,14 +33,8 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [
+export let constantRoutes = [
   
-  {
-    path: '/company',
-    component: () => import('@/views/company/company'),
-    hidden: true
-  },
-
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -50,17 +47,37 @@ export const constantRoutes = [
     hidden: true
   },
 
+  {
+    path: '/website',
+    component: () => import('@/views/website/index'),
+    hidden: true
+  },
+
   // {
-  //   path: '/',
+  //   path: '/website',
   //   component: Layout,
-  //   redirect: '/dashboard',
+  //   redirect: '/website',
   //   children: [{
-  //     path: 'dashboard',
-  //     name: 'Dashboard',
-  //     component: () => import('@/views/dashboard/index'),
-  //     meta: { title: 'Dashboard', icon: 'dashboard' }
-  //   }]
+  //     path: 'website',
+  //     name: 'Website',
+  //     component: () => import('@/views/website/index'),
+  //     meta: { title: 'website', icon: 'website' }
+  //   }],
+  //   // hidden: true
   // },
+  
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [{
+      path: 'dashboard',
+      name: 'Dashboard',
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: 'Dashboard', icon: 'dashboard' }
+    }],
+    hidden: true
+  },
 
   // {
   //   path: '/example',
@@ -168,8 +185,39 @@ export const constantRoutes = [
   // },
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/login', hidden: true }// 本项目所有重定向都回来登录页
 ]
+
+export const baseRoutes = [
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [{
+      path: 'dashboard',
+      name: 'Dashboard',
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: 'Dashboard', icon: 'dashboard' }
+    }],
+    hidden: true
+  },
+  { path: '*', redirect: '/login', hidden: true }// 本项目所有重定向都回来登录页
+]
+
+// export const routesStore = {
+//   constantRoutes,
+// };
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
