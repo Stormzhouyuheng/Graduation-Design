@@ -6,37 +6,49 @@
         <span>{{ currentMenu.slice(0, 2) }}</span>{{ currentMenu.slice(-2) }}
       </div>
       <div class="pull-right nav-b">当前位置: 
-        <a href="index.htm">新闻</a>
+        <a>{{ currentMenu.slice(-2) === '操作' ? '操作' : currentMenu === '招聘信息' ? '招聘' : '新闻' }}</a>
         <div class="arrow">&gt; </div>
-        <a href="gryw.htm">{{ currentMenu }}</a>
+        <a>{{ currentMenu }}</a>
       </div>
     </div>
 
-    <div class="newsPart">
-      <div class="left">
-        <NewsItem 
-          class="test"
-          :class="currentIndex === index ? 'currentIndex' : ''"
-          v-for="(item, index) in newList"
-          :key="index"
-          :item="item" 
-          :index="index"
-          @handleCurrentNews="handleCurrentNews"/>
-      </div>
-      <div class="right">
-        <NewsDetails 
-          v-loading="loading" 
-          :newContent="newContent" 
-          :page="page" />
-      </div>
+    <div class="" v-if="currentMenu.slice(-2) === '操作'">
+      <PersonalOperate />
     </div>
-
-    <div class="handlePage" v-if="Object.keys(newContent).length !== 0">
-        <Pagination 
-          :total="page.total"
-          :page.sync="page.pageNum"
-          :limit.sync="page.pageSize"
-          @pagination="handleGetNewsList"/>
+    <div v-else-if="currentMenu === '招聘信息'">
+      <HireInfo />
+    </div>
+    <div v-else>
+      <div class="newsPart" v-loading="loading" >
+        <div class="left">
+          <div style="width: 100%; text-align: right;">
+            <div 
+              style="padding: 10px; cursor: pointer; color: #666666" 
+              class="el-icon-refresh-right"
+              @click="refreshNews">更新</div>
+          </div>
+          <NewsItem 
+            class="test"
+            :class="currentIndex === index ? 'currentIndex' : ''"
+            v-for="(item, index) in newList"
+            :key="index"
+            :item="item" 
+            :index="index"
+            @handleCurrentNews="handleCurrentNews"/>
+        </div>
+        <div class="right">
+          <NewsDetails 
+            :newContent="newContent" 
+            :page="page" />
+        </div>
+      </div>
+      <div class="handlePage" v-if="Object.keys(newContent).length !== 0">
+          <Pagination 
+            :total="page.total"
+            :page.sync="page.pageNum"
+            :limit.sync="page.pageSize"
+            @pagination="handleGetNewsList"/>
+      </div>
     </div>
   </div>
 </template>
@@ -44,7 +56,9 @@
 <script>
 import NewsItem from '@/components/NewsItem'
 import NewsDetails from '@/components/NewsDetails'
-import {getNewsList, getNewsContent} from '@/api/news'
+import PersonalOperate from '@/components/PersonalOperate'
+import HireInfo from '@/components/HireInfo'
+import {getNewsList, getNewsContent, reCatchNews} from '@/api/news'
 export default {
     data() {
         return {
@@ -58,12 +72,15 @@ export default {
               pageSize: 10,
               pageNum: 1, 
               total: 0
-            }
+            },
+            type: 'gryw'
         }
     },
     components: {
       NewsItem,
-      NewsDetails
+      NewsDetails,
+      PersonalOperate,
+      HireInfo
     },
     props: {
       currentMenu: {
@@ -71,13 +88,20 @@ export default {
         default: '广软要闻'
       }
     },
+    watch: {
+      currentMenu(newVal) {
+        this.type = this.currentMenu === '广软要闻' ? 'gryw' : this.currentMenu === '媒体广软' ? 'mtgr' : 'xykx'
+        this.handleGetNewsList()
+      }
+    },
     methods: {
       handleGetNewsList() {
         this.currentIndex = 0
+        console.log('this.type', this.type);
         getNewsList({
           page: this.page.pageNum,
           pageSize: this.page.pageSize
-        }).then(res => {
+        }, this.type).then(res => {
           this.newList = res.newList
           this.page.total = res.total
           this.link = res.newList[0].link
@@ -102,6 +126,13 @@ export default {
         this.link= news.item.link
         this.newContent = {}
         this.handleGetNewsContent()
+      },
+      refreshNews() {
+        reCatchNews(this.type).then(res => {
+          this.$message.success(res.msg)
+        }).then(() => {
+          this.handleGetNewsList()
+        })
       }
     },
     mounted() {

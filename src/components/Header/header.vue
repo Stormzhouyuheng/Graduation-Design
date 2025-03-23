@@ -6,12 +6,11 @@
 		<div class="header-center">
 			<div class="center container">
 				<div class="newsLogo">
-					<!-- <img src="../../assets/news.png" alt=""> -->
 					学生实习就业管理系统
 				</div>
 				<div class="search">
-					<!-- <div @click="gotoSchool">学校主页</div> -->
-					<div @click="gotoSchool">退出</div>
+					<div @click="gotoSchool">用户：{{ routerInfo.username }}</div>
+					<div class="exit" @click="gotoSchool">退出</div>
 				</div>
 			</div>
 		</div>
@@ -28,7 +27,8 @@
 </template>
 
 <script>
-// import { dateFormat } from '@/utils/timeFrame'
+import Cookies from 'js-cookie';
+import { dateFormat } from '@/utils/timeFrame';
 export default {
     name: "Header",
 	data() {
@@ -38,6 +38,7 @@ export default {
 				'广软要闻',
 				'媒体广软',
 				'校园快讯',
+				'招聘信息'
 				// '教学科研',
 				// '广软人物',
 				// '广软融媒',
@@ -46,7 +47,8 @@ export default {
 			],
 			// date: dateFormat('YYYY年mm月dd日 HH时MM分', new Date()),
 			currentTime: new Date(), // 存储当前时间的日期对象
-        	formattedTime: '' // 存储格式化后的时间字符串
+        	formattedTime: '', // 存储格式化后的时间字符串
+			routerInfo: null
 		}
 	},
 	methods: {
@@ -74,6 +76,12 @@ export default {
 			const weekDay = weekDays[date.getDay()];
 			// 返回格式化后的时间字符串
 			return `${year}-${month}-${day} ${hours}:${minutes}:${seconds} ${weekDay}`;
+		},
+		initMenu() {
+			let menus = JSON.parse(JSON.stringify(this.menus));
+			menus.push(this.routerInfo.role[0].role_name + '操作')
+			this.menus = menus
+			
 		}
 	},
 	beforeDestroy() {
@@ -89,7 +97,13 @@ export default {
 		this.timer = setInterval(() => {
 			this.updateTime();
 		}, 1000);
+		this.routerInfo = JSON.parse(Cookies.get('routerInfo'));
+		console.log(this.routerInfo);
+		
 	},
+	mounted() {
+		this.initMenu()
+	}
 }
 </script>
 
@@ -138,12 +152,13 @@ export default {
 		display: flex;
 		// width: 10%;
 		font-size: 18px;
-		color: #ffffffad;
+		color: #ffffff;
 		letter-spacing: 2px;
 		margin-top: 5px;
-		cursor: pointer;
-		// background: yellow;
-		// align-items: center;
+		.exit {
+			cursor: pointer;
+			margin: 0 20px;
+		}
 	}
 }
 .header-bottom {
