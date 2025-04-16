@@ -25,8 +25,17 @@
                     <HireInfo
                         v-if="active === '招聘信息'"
                         :userId="routerInfo.user_id"/>
+                    <ManageAnounce
+                        v-if="active === '公告查询'"
+                        :userId="routerInfo.user_id" />
+                    <JobManage
+                        v-if="active === '招聘管理'"
+                        :userId="routerInfo.user_id" />
                 </div>
                 <div v-if="routerInfo.role[0].role_name === '企业'">
+                    <ManageAnounce
+                        v-if="active === '公告查询'"
+                        :userId="routerInfo.user_id" />
                 </div>
                 <div v-if="routerInfo.role[0].role_name === '教师'">
                     <TaskManage
@@ -34,6 +43,9 @@
                         :userId="routerInfo.user_id" />
                     <StudentManage
                         v-if="active === '学生管理'"
+                        :userId="routerInfo.user_id" />
+                    <ManageAnounce
+                        v-if="active === '公告查询'"
                         :userId="routerInfo.user_id" />
                 </div>
                 <div v-if="routerInfo.role[0].role_name === '管理员'">
@@ -46,6 +58,10 @@
                     <ManageCompany
                         v-if="active === '企业信息'"
                         :userId="routerInfo.user_id" />
+                    <ManageAnounce
+                        v-if="active === '公告管理'"
+                        :userId="routerInfo.user_id"
+                        :isEdit="true"/>
                 </div>
             </div>
         </div>
@@ -58,6 +74,7 @@ import Cookies from 'js-cookie';
 import StudentInfo from '@/views/student/studentInfo.vue'
 import StudentTaskManage from '@/views/student/taskManage.vue'
 import HireInfo from '@/components/HireInfo/index.vue'
+import JobManage from '@/views/student/jobManage.vue';
 // 教师
 import TaskManage from '@/views/teacher/taskManage.vue'
 import StudentManage from '@/views/teacher/studentManage.vue'
@@ -65,6 +82,7 @@ import StudentManage from '@/views/teacher/studentManage.vue'
 import ManageStudent from '@/views/manager/manageStudent.vue'
 import ManageTeacher from '@/views/manager/manageTeacher.vue'
 import ManageCompany from '@/views/manager/manageCompany.vue'
+import ManageAnounce from '@/views/manager/manageAnounce.vue'
 export default {
     name: 'PersonalOperate',
     data() {
@@ -77,13 +95,15 @@ export default {
         StudentInfo,
         StudentTaskManage,
         HireInfo,
+        JobManage,
         
         TaskManage,
         StudentManage,
 
         ManageStudent,
         ManageTeacher,
-        ManageCompany
+        ManageCompany,
+        ManageAnounce
     },
     methods: {
         handleSelect(index, indexPath) {

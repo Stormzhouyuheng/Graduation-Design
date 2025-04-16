@@ -225,7 +225,6 @@ export default {
                             message: '登录成功',
                             type: 'success'
                         });
-                        console.log('res', res);
                         // 将路由信息存储到cookie中
                         // this.handleCookie(res)
                         Cookies.set('routerInfo', res);

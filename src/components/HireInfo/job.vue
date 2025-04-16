@@ -29,7 +29,13 @@
         <div class="company-introduce-content common singleJob" 
             v-for="(jobItem, index) in jobList" 
             :key="index">
-            <el-tag style="margin-bottom: 10px;">{{ '岗位' + (index + 1) }}</el-tag>
+            <div style="margin-bottom: 10px;display: flex;justify-content: space-between;">
+                <el-tag>{{ '岗位' + (index + 1) }}</el-tag>
+                <div>
+                    <el-button type="primary" size="small" @click="submit(jobItem)" :disabled="jobItem.disabled">投递</el-button>
+                    <el-button type="error" size="small" @click="cancel(jobItem)" :disabled="!jobItem.disabled">取消</el-button>
+                </div>
+            </div>
             <div style="padding-bottom: 10px;">
                 <div style="margin-bottom: 10px;">岗位职责</div>
                 <div>{{ jobItem.dutyWork }}</div>
@@ -43,6 +49,8 @@
 </template>
 
 <script>
+import { companyResumePosition, companyCancelResumePosition } from '@/api/company'
+import Cookies from 'js-cookie'
 export default {
     name: 'Job',
     props: {
@@ -53,6 +61,46 @@ export default {
         jobList: {
             type: Array,
             default: () => []
+        }
+    },
+    methods: {
+        submit(item) {
+            this.$confirm('是否投递该岗位？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning' 
+            }).then(() => {
+                const user_id = JSON.parse(Cookies.get('routerInfo')).user_id;
+                companyResumePosition({
+                    user_id,
+                    position_id: item.id,
+                }).then(res => {
+                    this.$message({
+                        message: res.msg,
+                        type:'success'
+                    })
+                    item.disabled = true
+                })
+            })
+        },
+        cancel(item) {
+            this.$confirm('是否取消投递？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning' 
+            }).then(() => {
+                const user_id = JSON.parse(Cookies.get('routerInfo')).user_id;
+                companyCancelResumePosition({
+                    user_id,
+                    position_id: item.id,
+                }).then(res => {
+                    this.$message({
+                        message: res.msg,
+                        type:'success'
+                    })
+                    item.disabled = false
+                })
+            })
         }
     }
 }

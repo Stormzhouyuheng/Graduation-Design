@@ -86,9 +86,13 @@ export default {
                     return;
                 }else {
                     this.dialogVisible = true;
-                    this.jobList = res;
+                    const data = res;
+                    data.forEach(item => {
+                        item.disabled = false;
+                    })
+                    this.jobList = data
+                    console.log('this.jobList', this.jobList);
                 }
-                console.log('/company/positionTemp', res);
             })
         },
         handleClose() {

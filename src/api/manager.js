@@ -35,3 +35,38 @@ export function updateState(data) {
         data
     })
 }
+
+// /announce
+export function announce() {
+    return request({
+        url: `/announce`,
+        method: 'get'
+    }) 
+}
+
+// /announce/create
+export function createAnnounce(data) {
+    return request({
+        url: `/announce/create`,
+        method: 'post',
+        data
+    }) 
+}
+
+// /announce/update
+export function updateAnnounce(data) {
+    return request({
+        url: `/announce/update`,
+        method: 'post',
+        data
+    }) 
+}
+
+// /announce/delete
+export function deleteAnnounce(data) {
+    return request({
+        url: `/announce/delete`,
+        method: 'post',
+        data
+    }) 
+}

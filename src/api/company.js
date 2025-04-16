@@ -16,3 +16,30 @@ export function companyPositionTemp(data) {
         data
     })
 }
+
+// /company/resumePosition
+export function companyResumePosition(data) {
+    return request({
+        url: '/company/resumePosition',
+        method: 'post',
+        data
+    }) 
+}
+
+// /company/stuPositions
+export function companyStuPositions(data) {
+    return request({
+        url: '/company/stuPositions',
+        method: 'post',
+        data
+    }) 
+}
+
+// /company/cancelResumePosition
+export function companyCancelResumePosition(data) {
+    return request({
+        url: '/company/cancelResumePosition',
+        method: 'post',
+        data
+    })  
+}
